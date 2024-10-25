@@ -1,71 +1,73 @@
-//Initial References
-let result = document.getElementById("result");
-let searchBtn = document.getElementById("search-btn");
-let url = "https://www.themealdb.com/api/json/v1/1/search.php?s=";
+const checkGuessForm = document.querySelector(".checkGuessForm");
+const checkGuessInput = document.querySelector(".checkGuessInput");
+const resetButton = document.querySelector(".resetButton");
+const statusText = document.querySelector(".status");
+const guessNumber = document.querySelector(".guesses");
 
-searchBtn.addEventListener("click", () => {
-  let userInp = document.getElementById("user-inp").value;
-  if (userInp.length == 0) {
-    result.innerHTML = `<h3>Input Field Cannot Be Empty</h3>`;
-  } else {
-    fetch(url + userInp)
-      .then((response) => response.json())
-      .then((data) => {
-        let myMeal = data.meals[0];
-        console.log(myMeal);
-        console.log(myMeal.strMealThumb);
-        console.log(myMeal.strMeal);
-        console.log(myMeal.strArea);
-        console.log(myMeal.strInstructions);
-        let count = 1;
-        let ingredients = [];
-        for (let i in myMeal) {
-          let ingredient = "";
-          let measure = "";
-          if (i.startsWith("strIngredient") && myMeal[i]) {
-            ingredient = myMeal[i];
-            measure = myMeal[`strMeasure` + count];
-            count += 1;
-            ingredients.push(`${measure} ${ingredient}`);
-          }
-        }
-        console.log(ingredients);
+const NUMBER_OF_GUESSES = 10;
 
-        result.innerHTML = `
-    <img src=${myMeal.strMealThumb}>
-    <div class="details">
-        <h2>${myMeal.strMeal}</h2>
-        <h4>${myMeal.strArea}</h4>
-    </div>
-    <div id="ingredient-con"></div>
-    <div id="recipe">
-        <button id="hide-recipe">X</button>
-        <pre id="instructions">${myMeal.strInstructions}</pre>
-    </div>
-    <button id="show-recipe">View Recipe</button>
-    `;
-        let ingredientCon = document.getElementById("ingredient-con");
-        let parent = document.createElement("ul");
-        let recipe = document.getElementById("recipe");
-        let hideRecipe = document.getElementById("hide-recipe");
-        let showRecipe = document.getElementById("show-recipe");
+let randomNumber = generateRandomNumber();
+let guessesLeft = NUMBER_OF_GUESSES;
 
-        ingredients.forEach((i) => {
-          let child = document.createElement("li");
-          child.innerText = i;
-          parent.appendChild(child);
-          ingredientCon.appendChild(parent);
-        });
+guessNumber.innerHTML = guessesLeft;
 
-        hideRecipe.addEventListener("click", () => {
-          recipe.style.display = "none";
-        });
-        showRecipe.addEventListener("click", () => {
-          recipe.style.display = "block";
-        });
-      })
-      .catch(() => {
-        result.innerHTML = `<h3>Invalid Input</h3>`;
-      });
-  }
+checkGuessForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const guessedNumber = checkGuessInput.value;
+
+  checkGuess(guessedNumber, randomNumber);
+
+  checkGuessInput.value = "";
+  checkGuessInput.focus();
 });
+
+resetButton.addEventListener("click", reset);
+
+function reset(e) {
+  randomNumber = generateRandomNumber();
+  guessesLeft = NUMBER_OF_GUESSES;
+  checkGuessInput.value = "";
+  checkGuessInput.focus();
+
+  console.log(guessesLeft);
+  guessNumber.innerHTML = guessesLeft;
+  statusText.innerHTML = "Let's Guess the number";
+}
+
+function generateRandomNumber() {
+  return Math.floor(Math.random() * 100);
+}
+
+function highGuess() {
+  statusText.innerHTML = "Opps! Your Guess is high";
+}
+
+function lowGuess() {
+  statusText.innerHTML = "Opps! Your Guess is Low";
+}
+
+function correctGuess() {
+  statusText.innerHTML = "Congratulations! Your Guess is Correct";
+
+  reset();
+}
+
+function checkGuess(guessedNumber, realNumber) {
+  if (guessesLeft != 0) {
+    if (guessedNumber == realNumber) {
+      correctGuess();
+    } else {
+      if (guessedNumber < realNumber) {
+        lowGuess();
+      } else {
+        highGuess();
+      }
+      guessesLeft--;
+      guessNumber.innerHTML = guessesLeft;
+    }
+  }
+
+  if (guessesLeft == 0) {
+    statusText.innerHTML = "You have no More chances left";
+  }
+}

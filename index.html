@@ -1,29 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Recipe App</title>
-    <!-- Google Fonts -->
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
-      rel="stylesheet"
-    />
-    <!-- Stylesheet -->
+    <title> Guess The Number</title>
+
     <link rel="stylesheet" href="style.css" />
+    <script src="main.js" defer></script>
   </head>
   <body>
     <div class="container">
-      <div class="search-container">
-        <input
-          type="text"
-          placeholder="Type A Dish Name Here.."
-          id="user-inp"
-        />
-        <button id="search-btn">Search</button>
+      <div class="content">
+        <div class="header">Guess Number b/w 1 and 100</div>
+        <div class="status">Let's start the Game</div>
+        <div class="main">
+          <form class="checkGuessForm">
+            <input
+              type="number"
+              min="0"
+              max="100"
+              class="checkGuessInput"
+              required
+            />
+            <input
+              type="submit"
+              value="Check"
+              class="checkGuessButton actionButton"
+            />
+          </form>
+          <button class="resetButton actionButton">Reset</button>
+        </div>
+        <div class="footer">Chances Left: <span class="guesses">8</span></div>
       </div>
-      <div id="result"></div>
     </div>
-    <!-- Script -->
-    <script src="main.js"></script>
   </body>
 </html>
