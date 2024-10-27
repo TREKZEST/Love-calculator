@@ -36,7 +36,7 @@ body{
 
 .box{
     padding: 100px 0;
-    background-image: url('./heart.png');
+    background-image: url('/Image/heart.png');
     background-repeat: no-repeat;
     background-size: contain;
     background-position: 50% 60%;
